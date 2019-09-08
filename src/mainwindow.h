@@ -23,7 +23,7 @@
 #include <QMap>
 
 
-class SoundCard;
+class ISoundCard;
 
 namespace Ui
 {
@@ -69,7 +69,7 @@ private:
       Wrapper around ALSA functions. Takes care of card initialization, reading and writing.
       Callbacks modify this window's widgets.
       */
-    SoundCard * card;
+    ISoundCard * card;
 
     ///// GUI METHODS
     /// Show or hide button groups (matrix columns & rows)

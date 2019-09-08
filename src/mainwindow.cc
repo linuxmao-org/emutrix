@@ -22,7 +22,7 @@
 #include "soundcard.h"
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow), card(NULL)
+    : QMainWindow(parent), ui(new Ui::MainWindow), card(new NullSoundCard)
 {
     qDebug("Setting up UI...");
     // Qt creator magic
@@ -56,8 +56,7 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     qDebug("Cleaning up...");
-    if (card)
-        delete card;
+    delete card;
     delete ui;
 }
 

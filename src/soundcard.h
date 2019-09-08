@@ -22,12 +22,36 @@
 #include "alsa/asoundlib.h"
 #include "mainwindow.h"
 
+class ISoundCard
+{
+public:
+    virtual ~ISoundCard() {}
+
+    virtual void setupCallbacks(MainWindow * w) = 0;
+    virtual void updateCallbacks() = 0;
+    virtual void writeStereoInt(const QString & el, int value) = 0;
+    virtual void writeBool(const QString & el, bool) = 0;
+    virtual void writeEnum(const QString &el, int i) = 0;
+    virtual void matrixWriteEnum(const QString & el, int i) = 0;
+};
+
+class NullSoundCard : public ISoundCard
+{
+public:
+    void setupCallbacks(MainWindow *) override {}
+    void updateCallbacks() override {}
+    void writeStereoInt(const QString &, int) override {}
+    void writeBool(const QString &, bool) override {}
+    void writeEnum(const QString &, int) override {}
+    void matrixWriteEnum(const QString &, int) override {}
+};
+
 /** This class is a wrapper around ALSA functions.
   It is targeted at handling EMU cards only. Deals with initialization in constructor and
   offers reading and writing functionality.
   Callbacks are also handled by this class when requested through updateCallbacks()
   */
-class SoundCard
+class SoundCard : public ISoundCard
 {
 public:
     /** Constructor.
@@ -44,7 +68,7 @@ public:
       @param w is the mainwindow that should be modified with callbacks.
       Should this be moved to updateCallbacks()?
     */
-    void setupCallbacks(MainWindow * w);
+    void setupCallbacks(MainWindow * w) override;
 
     /** Returns a list of card names & ALSA indices
       Ordered acording to ALSA index
@@ -58,7 +82,7 @@ public:
         ALSA status and polls any pending events, calling callbacks.
         Argument ignored.
         */
-    void updateCallbacks();
+    void updateCallbacks() override;
 
     ///// VARIOUS ALSA WRITER FUNCTIONS
     /** Writes ALSA elements consisting of one or two integer values ("faders").
